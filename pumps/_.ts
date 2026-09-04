@@ -1,4 +1,4 @@
-import { instanceToIndex, type moduleInstancesType } from "../../components/other/ModuleListProvider";
+import { instanceToIndex, type moduleInstancesType } from "../../common-types/Module";
 import { checkNumber, sendJsonApiMessage, type apiMessageOptions } from "../apiMessageBase"
 
 export namespace Pumps{

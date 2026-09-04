@@ -7,5 +7,9 @@ export const smbr_apiMessageConfig = {
     defaultPorts : {
         reactorApi: 8089,
         webControlApi: 80
-    }
+    },
+    deviceRestartHandler : (changes : {
+        hostname?: string,
+        firmware?: true
+    })=>Promise<void>
 }

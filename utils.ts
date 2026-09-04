@@ -1,5 +1,4 @@
-import { instanceToIndex, type Module } from "../components/other/ModuleListProvider"
-import type { System } from "./system/_"
+import { instanceToIndex, type Module } from "../common-types/Module"
 
 export function getModuleEndpoint(module : Module, endpoint : string){
     switch (module.type) {

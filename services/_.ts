@@ -1,5 +1,5 @@
 import { checkArray, checkBoolean, checkNull, checkNumber, checkString, checkStringEnum, checkTimestamp, sendJsonApiMessage, type apiMessageOptions } from "../apiMessageBase"
-import { HandleDeviceRestart } from "../../components/other/DeviceRestartHandler"
+import { smbr_apiMessageConfig } from "../apiMessageConfig"
 
 export namespace Services{
     export type stateTypes =  "ok" | "problem" | "critical-problem"
@@ -85,7 +85,7 @@ export namespace Services{
 
         let result = await sendJsonApiMessage(opts);
 
-        HandleDeviceRestart({
+        smbr_apiMessageConfig.deviceRestartHandler({
             firmware: true
         })
     }

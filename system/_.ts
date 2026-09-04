@@ -1,6 +1,6 @@
-import { HandleDeviceRestart } from "../../components/other/DeviceRestartHandler";
-import { moduleInstances, moduleTypes, type Module, type moduleInstancesType, type moduleTypesType } from "../../components/other/ModuleListProvider";
+import { moduleInstances, moduleTypes, type Module, type moduleInstancesType, type moduleTypesType } from "../../common-types/Module";
 import { checkArray, checkBoolean, checkNumber, checkString, checkStringEnum, checkTimestamp, sendJsonApiMessage, type apiMessageOptions } from "../apiMessageBase"
+import { smbr_apiMessageConfig } from "../apiMessageConfig";
 
 export namespace System{
 
@@ -169,7 +169,7 @@ export namespace System{
 
         let response = await sendJsonApiMessage(opts);
 
-        HandleDeviceRestart({
+        smbr_apiMessageConfig.deviceRestartHandler({
             hostname: newHostname
         })
     }
