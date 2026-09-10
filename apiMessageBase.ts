@@ -1,4 +1,4 @@
-import { isArray, isBoolean, isNull, isNumber, isString, isValidDateTime } from "../../lib/web-components/other/utils";
+import { isArray, isBoolean, isNull, isNumber, isObject, isString, isValidDateTime } from "../../lib/web-components/other/utils";
 import { smbr_apiMessageConfig } from "./apiMessageConfig";
 
 export const targets = ["reactorApi","webControlApi"] as const;
@@ -215,5 +215,18 @@ export function checkTimestamp(value: any, key:string, options: apiMessageOption
 export function checkNull(value: any, key: string, options: apiMessageOptions){
     if(!isNull(value[key])){
       throw new ApiUnparsableBody(options,`response should contain a null: ${key}`)
+    }
+}
+
+export function checkObject(value: any, key: string, objectKeys: string[], options: apiMessageOptions) {
+    let object : any = value[key]
+    
+    if (!isObject(object)) {
+        throw new ApiUnparsableBody(options, `response should contain an object: ${key}`)
+    }
+    for (let subKey of objectKeys) {
+        if (!object.hasOwnProperty(subKey)) {
+            throw new ApiUnparsableBody(options, `response should contain an object: ${key}, with key: ${subKey}`)
+        }
     }
 }
