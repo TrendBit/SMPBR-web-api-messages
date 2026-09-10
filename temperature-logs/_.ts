@@ -1,6 +1,7 @@
 import { isNumber } from "chart.js/helpers"
 import { checkArray, checkNumber, checkString, sendJsonApiMessage, type apiMessageOptions } from "../apiMessageBase"
 import { isNull } from "../../../lib/web-components/other/utils"
+import { webControlApiTarget } from "../apiMessageConfig"
 
 export namespace TemperatureLogs{
     export type Logs = Record<string,(number|undefined)[]>
@@ -20,7 +21,7 @@ export namespace TemperatureLogs{
     export async function sendGetLogs(options : getLogs) : Promise<getLogsResult>{
         let opts : apiMessageOptions = {
             url: "/temperature-logs",
-            target: "webControlApi",
+            target: webControlApiTarget,
             data:JSON.stringify({
                 fromCycle : options.fromCycle,
                 scope : options.scope

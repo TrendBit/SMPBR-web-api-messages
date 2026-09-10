@@ -1,3 +1,4 @@
+import { reactorApiTarget } from "../apiMessageConfig"
 import { sendApiMessageDeleteFile, sendApiMessageGetFileContent, sendApiMessageGetFileList, sendApiMessageSetFileContent, type apiMessageDeleteFile, type apiMessageGetFileContent, type apiMessageGetFileList, type apiMessageSetFileContent } from "../apiMessageFileOperations"
 
 export namespace Recipes{
@@ -13,7 +14,8 @@ export namespace Recipes{
     export async function sendGetFileList(options: getFileList) : Promise<getFileListResult>{
         let opts : apiMessageGetFileList = {
             url: "/recipes",
-            reloadFromFileSystem: options.reloadFromFileSystem
+            reloadFromFileSystem: options.reloadFromFileSystem,
+            target: reactorApiTarget
         }
 
         let result = await sendApiMessageGetFileList(opts);
@@ -32,7 +34,8 @@ export namespace Recipes{
     export async function sendGetFileContent(options: getFileContent) : Promise<getFileContentResult>{
         let opts : apiMessageGetFileContent = {
             url: "/recipes",
-            fileName: options.fileName
+            fileName: options.fileName,
+            target: reactorApiTarget
         }
 
         let result = await sendApiMessageGetFileContent(opts);
@@ -50,7 +53,8 @@ export namespace Recipes{
         let opts : apiMessageSetFileContent = {
             url: "/recipes",
             fileName: options.fileName,
-            content: options.content
+            content: options.content,
+            target: reactorApiTarget
         }
 
         await sendApiMessageSetFileContent(opts);
@@ -64,7 +68,8 @@ export namespace Recipes{
     export async function sendDeleteFile(options: deleteFile) : Promise<void>{
         let opts : apiMessageDeleteFile = {
             url: "/recipes",
-            fileName: options.fileName
+            fileName: options.fileName,
+            target: reactorApiTarget
         }
         await sendApiMessageDeleteFile(opts);
     }

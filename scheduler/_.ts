@@ -1,4 +1,5 @@
 import { checkArray, checkBoolean, checkNull, checkNumber, checkString, checkTimestamp, sendJsonApiMessage, sendTextApiMessage, type apiMessageOptions } from "../apiMessageBase"
+import { reactorApiTarget } from "../apiMessageConfig";
 
 export namespace Scheduler {
     export type getScheduledResult = {
@@ -8,7 +9,8 @@ export namespace Scheduler {
 
     export async function sendGetScheduled() : Promise<getScheduledResult>{
         let opts : apiMessageOptions = {
-            url: "/scheduler/recipe"
+            url: "/scheduler/recipe",
+            target: reactorApiTarget
         }
 
         let result = await sendJsonApiMessage(opts);
@@ -30,7 +32,8 @@ export namespace Scheduler {
     export async function sendSetScheduled(options : setSchedule) : Promise<void> {
         let opts : apiMessageOptions = {
             url: "/scheduler/recipe/"+encodeURI(options.fileName),
-            method: "POST"
+            method: "POST",
+            target: reactorApiTarget
         }
 
         await sendTextApiMessage(opts);
@@ -43,7 +46,8 @@ export namespace Scheduler {
     export async function sendStartScheduled() : Promise<startScheduledResult>{
         let opts : apiMessageOptions = {
             url: "/scheduler/start",
-            method: "POST"
+            method: "POST",
+            target: reactorApiTarget
         }
 
         let result = await sendJsonApiMessage(opts);
@@ -59,7 +63,8 @@ export namespace Scheduler {
     export async function sendStopScheduled() : Promise<void>{
         let opts : apiMessageOptions = {
             url: "/scheduler/stop",
-            method: "POST"
+            method: "POST",
+            target: reactorApiTarget
         }
 
         await sendTextApiMessage(opts);
@@ -77,7 +82,8 @@ export namespace Scheduler {
 
     export async function sendRuntimeInfo() : Promise<runtimeInfoResult>{
         let opts : apiMessageOptions = {
-            url: "/scheduler/runtime"
+            url: "/scheduler/runtime",
+            target: reactorApiTarget
         }
 
         let result = await sendJsonApiMessage(opts);

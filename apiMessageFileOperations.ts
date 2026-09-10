@@ -1,8 +1,8 @@
-import { checkArray, checkString, checkStringEnum, sendApiMessage, sendJsonApiMessage, sendTextApiMessage, type apiMessageOptions, type targetsType } from "./apiMessageBase"
+import { type apiTarget, checkArray, checkString, checkStringEnum, sendApiMessage, sendJsonApiMessage, sendTextApiMessage, type apiMessageOptions } from "./apiMessageBase"
 
 export type apiMessageGetFileList = {
     url: string,
-    target?: targetsType,
+    target: apiTarget,
     reloadFromFileSystem : boolean
 }
 
@@ -64,7 +64,7 @@ export function parseApiMessageFileList(fileList : string[]) : FileListDirectory
 
 export type apiMessageGetFileContent = {
     url: string,
-    target?: targetsType,
+    target: apiTarget,
     fileName: string
 }
 
@@ -92,7 +92,7 @@ export async function sendApiMessageGetFileContent(options : apiMessageGetFileCo
 
 export type apiMessageSetFileContent = {
     url: string,
-    target?: targetsType,
+    target: apiTarget,
     fileName: string,
     content: string
 }
@@ -113,7 +113,7 @@ export async function sendApiMessageSetFileContent(options : apiMessageSetFileCo
 
 export type apiMessageDeleteFile = {
     url: string,
-    target?: targetsType,
+    target: apiTarget,
     fileName: string
 }
 

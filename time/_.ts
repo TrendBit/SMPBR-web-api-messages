@@ -1,5 +1,6 @@
 import { createSignal } from "solid-js";
 import { checkNumber, checkTimestamp, sendJsonApiMessage, type apiMessageOptions } from "../apiMessageBase";
+import { webControlApiTarget } from "../apiMessageConfig";
 
 export namespace Time{
     export let [deviceTime, setDeviceTime] = createSignal<Date | undefined>(undefined)
@@ -8,7 +9,7 @@ export namespace Time{
     export async function getTime() : Promise<Date>{
         let opts : apiMessageOptions = {
             url: "/time",
-            target: "webControlApi"
+            target: webControlApiTarget
         }
 
         let sendTime = Date.now();
@@ -37,7 +38,7 @@ export namespace Time{
     export async function sendConvertTime(options : convertTime) : Promise<Date>{
         let opts : apiMessageOptions = {
             url: "/time/convert",
-            target: "webControlApi",
+            target: webControlApiTarget,
             method: "POST",
             data: JSON.stringify({
                 time: options.timestamp

@@ -1,32 +1,47 @@
 import { isArray, isBoolean, isNull, isNumber, isObject, isString, isValidDateTime } from "../../lib/web-components/other/utils";
 import { smbr_apiMessageConfig } from "./apiMessageConfig";
 
-export const targets = ["reactorApi","webControlApi"] as const;
-export type targetsType = typeof targets[number];
+interface  targetOptions {
+    port: number,
+    hostname: string,
+    data: BodyInit | undefined;
+    method: "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
 
-export interface apiMessageOptions{
+    timeout: number;
+    contentType: string;
+
+    validStatusCodes: number[]
+}
+
+export interface apiTarget extends targetOptions{
+    name: string;
+}
+
+export interface apiMessageOptions extends Partial<targetOptions>{
+    target: apiTarget;
     url : string;
-    port ?: number;
-    method ?: "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
-    target ?: targetsType;
-    hostname ?: string;
-    data? : BodyInit;
-
-    timeout?: number;
-    contentType?: string;
-
-    validStatusCodes?: number[]
 }
 
 
-export class ApiMessageError extends Error{
-  constructor(options: apiMessageOptions ,message : string){
-    const fullUrl = "http://" + options.hostname + ":" + getTargetPort(options.target??"reactorApi").toString() + options.url;
-    super(`${fullUrl} [${options.method}]: ${message}`)
-    this.stack=""
-    this.name = "ApiMessageError";
-  }
-
+export class ApiMessageError extends Error {
+    constructor(options: apiMessageOptions, message: string) {
+        const target = options.target;
+        const url = options.url;
+        const port = options.port ?? target.port;
+        const hostname = options.hostname ?? target.hostname;
+        const method = options.method ?? target.method;
+        
+        const fullUrl =
+            "http://" +
+            hostname +
+            ":" +
+            port.toString() +
+            url;
+        
+        super(`(${target.name})-> ${fullUrl} [${method}]: ${message}`);
+        this.stack = "";
+        this.name = "ApiMessageError";
+    }
 }
 
 export class ApiConnectionError extends ApiMessageError {
@@ -67,35 +82,21 @@ export class ApiUnparsableBody extends ApiMessageError{
   }
 }
 
-export function getTargetPort(target : targetsType) : number{
-    const targetToPort = {
-        "reactorApi" : smbr_apiMessageConfig.defaultPorts.reactorApi,
-        "webControlApi" : smbr_apiMessageConfig.defaultPorts.webControlApi
-    }
-    return targetToPort[target];
-}
-
-export function getTargetHostname(target : targetsType) : string{
-    const targetToHostname = {
-        "reactorApi" : smbr_apiMessageConfig.defaultHostnames.reactorApi,
-        "webControlApi" : smbr_apiMessageConfig.defaultHostnames.webControlApi
-    }
-    return targetToHostname[target];
-}
-
 export type apiMessageJsonResult = {
   response: Response,
   jsonValue: any
 }
 
 export async function sendApiMessage(options:apiMessageOptions){
-    const target = options.target ?? "reactorApi";
+    const target = options.target;
     const url = options.url
-    const port = options.port ?? getTargetPort(target)
-    const hostname = options.hostname ?? getTargetHostname(target)
-    const method = options.method ?? "GET"
-    const returnCodes = options.validStatusCodes ?? [200]
-    const contentType = options.contentType ?? "application/json"
+    const port = options.port ?? target.port
+    const hostname = options.hostname ?? target.hostname
+    const method = options.method ?? target.method
+    const returnCodes = options.validStatusCodes ?? target.validStatusCodes
+    const contentType = options.contentType ?? target.contentType
+    const data = options.data ?? target.data
+    const timeout = options.timeout ?? target.timeout
 
     const url_full = "http://" + hostname + ":" + port.toString() + url;
 
@@ -109,10 +110,10 @@ export async function sendApiMessage(options:apiMessageOptions){
                 "Accept-Language": "cs,sk;q=0.8,en-US;q=0.5,en;q=0.3",
                 "Content-Type": contentType
             },
-            "body": options.data,
+            "body": data,
             "method": method,
             "mode": "cors",
-            signal: AbortSignal.timeout( options.timeout ?? 10000 )
+            signal: AbortSignal.timeout( timeout )
         });
     } catch(error){
         throw new ApiConnectionError(options);

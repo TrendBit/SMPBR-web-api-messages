@@ -1,4 +1,5 @@
 import { ApiMessageError, checkArray, checkBoolean, checkNumber, checkString, checkStringEnum, checkTimestamp, sendJsonApiMessage, type apiMessageOptions } from "../apiMessageBase"
+import { reactorApiTarget } from "../apiMessageConfig";
 import { Time } from "../time/_";
 
 export namespace Sensor_Fluorometer{
@@ -89,7 +90,8 @@ export namespace Sensor_Fluorometer{
         let opts : apiMessageOptions = {
             url: "/sensor/fluorometer/ojip/capture",
             method: "POST",
-            timeout: 5*options.lengthMs
+            timeout: 5*options.lengthMs,
+            target: reactorApiTarget
         }
 
         if(!(await sendCompleted()).capture_complete){
@@ -122,7 +124,8 @@ export namespace Sensor_Fluorometer{
     
     export async function sendCompleted(): Promise<completedResult> {
         let opts: apiMessageOptions = {
-            url: "/sensor/fluorometer/ojip/completed"
+            url: "/sensor/fluorometer/ojip/completed",
+            target: reactorApiTarget
         }
     
         let response = await sendJsonApiMessage(opts);
@@ -143,7 +146,8 @@ export namespace Sensor_Fluorometer{
     
     export async function sendReadLast(): Promise<sendReadLastResult> {
         let opts: apiMessageOptions = {
-            url: "/sensor/fluorometer/ojip/read_last"
+            url: "/sensor/fluorometer/ojip/read_last",
+            target: reactorApiTarget
         }
 
         if(!(await sendCompleted()).capture_complete){
@@ -162,7 +166,8 @@ export namespace Sensor_Fluorometer{
         let opts: apiMessageOptions = {
             url: "/sensor/fluorometer/calibrate",
             method: "POST",
-            data: "{}"
+            data: "{}",
+            target: reactorApiTarget
         }
 
         if(!(await sendCompleted()).capture_complete){

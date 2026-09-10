@@ -1,5 +1,6 @@
 import { instanceToIndex, type moduleInstancesType } from "../../common-types/Module";
 import { checkNumber, sendJsonApiMessage, type apiMessageOptions } from "../apiMessageBase"
+import { reactorApiTarget } from "../apiMessageConfig";
 
 export namespace Pumps{
     export function getPumpUrl(instance : moduleInstancesType, index : number | undefined, endpoint : string){
@@ -27,7 +28,8 @@ export namespace Pumps{
 
     export async function sendInfo(options : pumpsOptions) : Promise<infoResult>{
         let opts : apiMessageOptions= {
-            url: getPumpUrl(options.instance,options.pumpIndex,"info")
+            url: getPumpUrl(options.instance,options.pumpIndex,"info"),
+            target: reactorApiTarget
         }
 
         let result = await sendJsonApiMessage(opts);
@@ -44,7 +46,8 @@ export namespace Pumps{
 
     export async function sendStop(options : pumpsOptions) : Promise<void>{
         let opts : apiMessageOptions= {
-            url: getPumpUrl(options.instance,options.pumpIndex,"stop")
+            url: getPumpUrl(options.instance,options.pumpIndex,"stop"),
+            target: reactorApiTarget
         }
 
         await sendJsonApiMessage(opts);

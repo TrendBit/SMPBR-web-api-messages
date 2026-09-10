@@ -1,5 +1,5 @@
 import { checkArray, checkBoolean, checkNull, checkNumber, checkString, checkStringEnum, checkTimestamp, sendJsonApiMessage, type apiMessageOptions } from "../apiMessageBase"
-import { smbr_apiMessageConfig } from "../apiMessageConfig"
+import { reactorApiTarget, smbr_apiMessageConfig } from "../apiMessageConfig"
 
 export namespace Services{
     export type stateTypes =  "ok" | "problem" | "critical-problem"
@@ -21,7 +21,8 @@ export namespace Services{
 
     export async function sendServicesStatus() : Promise<servicesStatusResult>{
         let opts : apiMessageOptions = {
-            url: "/services"
+            url: "/services",
+            target: reactorApiTarget
         }
 
         let result = await sendJsonApiMessage(opts);
@@ -80,7 +81,8 @@ export namespace Services{
             method: "POST",
             validStatusCodes: [200, 202],
             data: await updateFile.arrayBuffer(),
-            timeout: 60000
+            timeout: 60000,
+            target: reactorApiTarget
         }
 
         let result = await sendJsonApiMessage(opts);

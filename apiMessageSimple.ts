@@ -1,9 +1,9 @@
-import { ApiMessageError, sendApiMessage, sendJsonApiMessage, type apiMessageOptions, type targetsType } from "./apiMessageBase"
+import { ApiMessageError, type apiTarget, sendApiMessage, sendJsonApiMessage, type apiMessageOptions } from "./apiMessageBase"
 
 export type apiMessageSimple = {
     url : string,
     key : string,
-    target? : targetsType,
+    target : apiTarget,
 }
 
 export class ApiMessageSimpleMissingKey extends ApiMessageError {

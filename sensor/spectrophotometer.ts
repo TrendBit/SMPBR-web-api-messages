@@ -1,5 +1,6 @@
 import { isArray, isNumber } from "../../../lib/web-components/other/utils"
 import { ApiUnparsableBody, checkArray, checkNumber, sendJsonApiMessage, type apiMessageOptions } from "../apiMessageBase"
+import { reactorApiTarget } from "../apiMessageConfig"
 
 export namespace Sensor_Spectrophotometer{
 
@@ -14,7 +15,8 @@ export namespace Sensor_Spectrophotometer{
     export async function sendMeasureAll() : Promise<measureAllResult>{
         let opts : apiMessageOptions = {
             url: "/sensor/spectrophotometer/measure_all",
-            method: "POST"
+            method: "POST",
+            target: reactorApiTarget
         }
         let result = await sendJsonApiMessage(opts)
     

@@ -1,6 +1,6 @@
 import { moduleInstances, moduleTypes, type Module, type moduleInstancesType, type moduleTypesType } from "../../common-types/Module";
 import { checkArray, checkBoolean, checkNumber, checkString, checkStringEnum, checkTimestamp, sendJsonApiMessage, type apiMessageOptions } from "../apiMessageBase"
-import { smbr_apiMessageConfig } from "../apiMessageConfig";
+import { reactorApiTarget, smbr_apiMessageConfig } from "../apiMessageConfig";
 
 export namespace System{
 
@@ -10,7 +10,8 @@ export namespace System{
 
     export async function sendModules() : Promise<modulesResult>{
         let opts : apiMessageOptions = {
-            url: "/system/modules"
+            url: "/system/modules",
+            target: reactorApiTarget
         }
 
         let response = await sendJsonApiMessage(opts);
@@ -60,7 +61,8 @@ export namespace System{
 
     async function sendProblems(url : string) : Promise<problemResult>{
         let opts : apiMessageOptions = {
-            url: url
+            url: url,
+            target: reactorApiTarget
         }
 
         let response = await sendJsonApiMessage(opts);
@@ -103,7 +105,8 @@ export namespace System{
 
     export async function sendIssues() : Promise<issuesResult>{
         let opts : apiMessageOptions = {
-            url: "/system/module/issues"
+            url: "/system/module/issues",
+            target: reactorApiTarget
         }
 
         let response = await sendJsonApiMessage(opts);
@@ -142,7 +145,8 @@ export namespace System{
 
     export async function sendVersion(): Promise<versionResult>{
         let opts: apiMessageOptions = {
-            url: "/system/version"
+            url: "/system/version",
+            target: reactorApiTarget
         }
 
         let response = await sendJsonApiMessage(opts);
@@ -164,7 +168,8 @@ export namespace System{
         let opts: apiMessageOptions = {
             url: "/core/hostname",
             data: '{"hostname": "' + newHostname + '"}',
-            method: "POST"
+            method: "POST",
+            target: reactorApiTarget
         }
 
         let response = await sendJsonApiMessage(opts);
