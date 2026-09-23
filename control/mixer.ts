@@ -1,4 +1,4 @@
-import { checkNumber, sendJsonApiMessage, type apiMessageOptions } from "../apiMessageBase"
+import { apiTarget, checkNumber, sendJsonApiMessage, type apiMessageOptions } from "../apiMessageBase"
 import { reactorApiTarget } from "../apiMessageConfig";
 
 export namespace Control_Mixer{
@@ -7,10 +7,10 @@ export namespace Control_Mixer{
         minRPM: number,
     }
 
-    export async function sendInfo() : Promise<infoResult>{
+    export async function sendInfo(target : apiTarget = reactorApiTarget) : Promise<infoResult>{
         let opts : apiMessageOptions= {
             url: "/control/mixer/info",
-            target: reactorApiTarget
+            target: target
         }
 
         let result = await sendJsonApiMessage(opts);

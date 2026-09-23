@@ -1,4 +1,4 @@
-import { checkArray, checkBoolean, checkNull, checkNumber, checkString, checkTimestamp, sendJsonApiMessage, sendTextApiMessage, type apiMessageOptions } from "../apiMessageBase"
+import { apiTarget, checkArray, checkBoolean, checkNull, checkNumber, checkString, checkTimestamp, sendJsonApiMessage, sendTextApiMessage, type apiMessageOptions } from "../apiMessageBase"
 import { reactorApiTarget } from "../apiMessageConfig";
 
 export namespace Scheduler {
@@ -7,10 +7,10 @@ export namespace Scheduler {
         content: string
     }
 
-    export async function sendGetScheduled() : Promise<getScheduledResult>{
+    export async function sendGetScheduled(target : apiTarget = reactorApiTarget) : Promise<getScheduledResult>{
         let opts : apiMessageOptions = {
             url: "/scheduler/recipe",
-            target: reactorApiTarget
+            target: target
         }
 
         let result = await sendJsonApiMessage(opts);
@@ -29,11 +29,11 @@ export namespace Scheduler {
         fileName : string
     }
 
-    export async function sendSetScheduled(options : setSchedule) : Promise<void> {
+    export async function sendSetScheduled(options : setSchedule, target : apiTarget = reactorApiTarget) : Promise<void> {
         let opts : apiMessageOptions = {
             url: "/scheduler/recipe/"+encodeURI(options.fileName),
             method: "POST",
-            target: reactorApiTarget
+            target: target
         }
 
         await sendTextApiMessage(opts);
@@ -43,11 +43,11 @@ export namespace Scheduler {
         processId : number
     }
 
-    export async function sendStartScheduled() : Promise<startScheduledResult>{
+    export async function sendStartScheduled(target : apiTarget = reactorApiTarget) : Promise<startScheduledResult>{
         let opts : apiMessageOptions = {
             url: "/scheduler/start",
             method: "POST",
-            target: reactorApiTarget
+            target: target
         }
 
         let result = await sendJsonApiMessage(opts);
@@ -60,11 +60,11 @@ export namespace Scheduler {
         }
     }
 
-    export async function sendStopScheduled() : Promise<void>{
+    export async function sendStopScheduled(target : apiTarget = reactorApiTarget) : Promise<void>{
         let opts : apiMessageOptions = {
             url: "/scheduler/stop",
             method: "POST",
-            target: reactorApiTarget
+            target: target
         }
 
         await sendTextApiMessage(opts);
@@ -80,10 +80,10 @@ export namespace Scheduler {
         startedAt: Date | undefined
     }
 
-    export async function sendRuntimeInfo() : Promise<runtimeInfoResult>{
+    export async function sendRuntimeInfo(target : apiTarget = reactorApiTarget) : Promise<runtimeInfoResult>{
         let opts : apiMessageOptions = {
             url: "/scheduler/runtime",
-            target: reactorApiTarget
+            target: target
         }
 
         let result = await sendJsonApiMessage(opts);

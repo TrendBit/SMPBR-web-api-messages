@@ -1,5 +1,5 @@
 import { instanceToIndex, type moduleInstancesType } from "../../common-types/Module";
-import { checkNumber, sendJsonApiMessage, type apiMessageOptions } from "../apiMessageBase"
+import { apiTarget, checkNumber, sendJsonApiMessage, type apiMessageOptions } from "../apiMessageBase"
 import { reactorApiTarget } from "../apiMessageConfig";
 
 export namespace Pumps{
@@ -26,10 +26,10 @@ export namespace Pumps{
         minFlowrate: number
     }
 
-    export async function sendInfo(options : pumpsOptions) : Promise<infoResult>{
+    export async function sendInfo(options : pumpsOptions, target : apiTarget = reactorApiTarget) : Promise<infoResult>{
         let opts : apiMessageOptions= {
             url: getPumpUrl(options.instance,options.pumpIndex,"info"),
-            target: reactorApiTarget
+            target: target
         }
 
         let result = await sendJsonApiMessage(opts);
@@ -44,10 +44,10 @@ export namespace Pumps{
         };
     }
 
-    export async function sendStop(options : pumpsOptions) : Promise<void>{
+    export async function sendStop(options : pumpsOptions, target : apiTarget = reactorApiTarget) : Promise<void>{
         let opts : apiMessageOptions= {
             url: getPumpUrl(options.instance,options.pumpIndex,"stop"),
-            target: reactorApiTarget
+            target: target
         }
 
         await sendJsonApiMessage(opts);

@@ -1,5 +1,5 @@
 import { moduleInstances, moduleTypes, type Module, type moduleInstancesType, type moduleTypesType } from "../../common-types/Module";
-import { checkArray, checkBoolean, checkNumber, checkString, checkStringEnum, checkTimestamp, sendJsonApiMessage, type apiMessageOptions } from "../apiMessageBase"
+import { apiTarget, checkArray, checkBoolean, checkNumber, checkString, checkStringEnum, checkTimestamp, sendJsonApiMessage, type apiMessageOptions } from "../apiMessageBase"
 import { reactorApiTarget, smbr_apiMessageConfig } from "../apiMessageConfig";
 
 export namespace System{
@@ -8,10 +8,10 @@ export namespace System{
         modules : Module[]
     }
 
-    export async function sendModules() : Promise<modulesResult>{
+    export async function sendModules(target : apiTarget = reactorApiTarget) : Promise<modulesResult>{
         let opts : apiMessageOptions = {
             url: "/system/modules",
-            target: reactorApiTarget
+            target: target
         }
 
         let response = await sendJsonApiMessage(opts);
@@ -59,10 +59,10 @@ export namespace System{
         problems: Problem[]
     }
 
-    async function sendProblems(url : string) : Promise<problemResult>{
+    async function sendProblems(url : string, target : apiTarget) : Promise<problemResult>{
         let opts : apiMessageOptions = {
             url: url,
-            target: reactorApiTarget
+            target: target
         }
 
         let response = await sendJsonApiMessage(opts);
@@ -80,12 +80,12 @@ export namespace System{
         return data;
     }
 
-    export async function sendErrors() : Promise<problemResult>{
-        return await sendProblems("/system/errors");
+    export async function sendErrors(target : apiTarget = reactorApiTarget) : Promise<problemResult>{
+        return await sendProblems("/system/errors", target);
     }
 
-    export async function sendWarnings() : Promise<problemResult>{
-       return await sendProblems("/system/warnings");
+    export async function sendWarnings(target : apiTarget = reactorApiTarget) : Promise<problemResult>{
+       return await sendProblems("/system/warnings", target);
     }
 
     export type issueType = {
@@ -103,10 +103,10 @@ export namespace System{
         issues : issueType[]
     }
 
-    export async function sendIssues() : Promise<issuesResult>{
+    export async function sendIssues(target : apiTarget = reactorApiTarget) : Promise<issuesResult>{
         let opts : apiMessageOptions = {
             url: "/system/module/issues",
-            target: reactorApiTarget
+            target: target
         }
 
         let response = await sendJsonApiMessage(opts);
@@ -143,10 +143,10 @@ export namespace System{
         dirty: boolean
     }
 
-    export async function sendVersion(): Promise<versionResult>{
+    export async function sendVersion(target : apiTarget = reactorApiTarget): Promise<versionResult>{
         let opts: apiMessageOptions = {
             url: "/system/version",
-            target: reactorApiTarget
+            target: target
         }
 
         let response = await sendJsonApiMessage(opts);
@@ -164,12 +164,12 @@ export namespace System{
     }
 
 
-    export async function sendHostname(newHostname: string): Promise<void>{
+    export async function sendHostname(newHostname: string, target : apiTarget = reactorApiTarget): Promise<void>{
         let opts: apiMessageOptions = {
             url: "/core/hostname",
             data: '{"hostname": "' + newHostname + '"}',
             method: "POST",
-            target: reactorApiTarget
+            target: target
         }
 
         let response = await sendJsonApiMessage(opts);

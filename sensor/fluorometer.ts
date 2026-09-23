@@ -1,4 +1,4 @@
-import { ApiMessageError, checkArray, checkBoolean, checkNumber, checkString, checkStringEnum, checkTimestamp, sendJsonApiMessage, type apiMessageOptions } from "../apiMessageBase"
+import { ApiMessageError, apiTarget, checkArray, checkBoolean, checkNumber, checkString, checkStringEnum, checkTimestamp, sendJsonApiMessage, type apiMessageOptions } from "../apiMessageBase"
 import { reactorApiTarget } from "../apiMessageConfig";
 import { Time } from "../time/_";
 
@@ -86,12 +86,12 @@ export namespace Sensor_Fluorometer{
         measurement: Measurement,
     }
     
-    export async function sendCapture(options : capture) : Promise<captureResult>{
+    export async function sendCapture(options : capture, target : apiTarget = reactorApiTarget) : Promise<captureResult>{
         let opts : apiMessageOptions = {
             url: "/sensor/fluorometer/ojip/capture",
             method: "POST",
             timeout: 5*options.lengthMs,
-            target: reactorApiTarget
+            target: target
         }
 
         if(!(await sendCompleted()).capture_complete){
@@ -122,10 +122,10 @@ export namespace Sensor_Fluorometer{
         capture_complete: boolean
     }
     
-    export async function sendCompleted(): Promise<completedResult> {
+    export async function sendCompleted(target : apiTarget = reactorApiTarget): Promise<completedResult> {
         let opts: apiMessageOptions = {
             url: "/sensor/fluorometer/ojip/completed",
-            target: reactorApiTarget
+            target: target
         }
     
         let response = await sendJsonApiMessage(opts);
@@ -144,10 +144,10 @@ export namespace Sensor_Fluorometer{
         measurement: Measurement
     }
     
-    export async function sendReadLast(): Promise<sendReadLastResult> {
+    export async function sendReadLast(target : apiTarget = reactorApiTarget): Promise<sendReadLastResult> {
         let opts: apiMessageOptions = {
             url: "/sensor/fluorometer/ojip/read_last",
-            target: reactorApiTarget
+            target: target
         }
 
         if(!(await sendCompleted()).capture_complete){
@@ -162,12 +162,12 @@ export namespace Sensor_Fluorometer{
         }
     }
 
-    export async function sendCalibrate() : Promise<void> {
+    export async function sendCalibrate(target : apiTarget = reactorApiTarget) : Promise<void> {
         let opts: apiMessageOptions = {
             url: "/sensor/fluorometer/calibrate",
             method: "POST",
             data: "{}",
-            target: reactorApiTarget
+            target: target
         }
 
         if(!(await sendCompleted()).capture_complete){

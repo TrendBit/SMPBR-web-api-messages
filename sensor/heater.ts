@@ -1,4 +1,4 @@
-import { checkNull, checkNumber, sendJsonApiMessage, type apiMessageOptions } from "../apiMessageBase";
+import { apiTarget, checkNull, checkNumber, sendJsonApiMessage, type apiMessageOptions } from "../apiMessageBase";
 import { reactorApiTarget } from "../apiMessageConfig";
 
 export namespace Sensor_Heater{
@@ -6,11 +6,11 @@ export namespace Sensor_Heater{
         targetTemp : number | undefined
     }
 
-    export async function sendGetTarget() : Promise<getTargetResult>{
+    export async function sendGetTarget(target : apiTarget = reactorApiTarget) : Promise<getTargetResult>{
         let opts : apiMessageOptions= {
             url: "/control/heater/target_temperature",
             validStatusCodes: [200,404],
-            target: reactorApiTarget
+            target: target
         }
 
         let result = await sendJsonApiMessage(opts);

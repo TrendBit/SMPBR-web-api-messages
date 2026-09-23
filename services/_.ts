@@ -1,4 +1,4 @@
-import { checkArray, checkBoolean, checkNull, checkNumber, checkString, checkStringEnum, checkTimestamp, sendJsonApiMessage, type apiMessageOptions } from "../apiMessageBase"
+import { apiTarget, checkArray, checkBoolean, checkNull, checkNumber, checkString, checkStringEnum, checkTimestamp, sendJsonApiMessage, type apiMessageOptions } from "../apiMessageBase"
 import { reactorApiTarget, smbr_apiMessageConfig } from "../apiMessageConfig"
 
 export namespace Services{
@@ -19,10 +19,10 @@ export namespace Services{
         services: serviceStatus[]
     }
 
-    export async function sendServicesStatus() : Promise<servicesStatusResult>{
+    export async function sendServicesStatus(target : apiTarget = reactorApiTarget) : Promise<servicesStatusResult>{
         let opts : apiMessageOptions = {
             url: "/services",
-            target: reactorApiTarget
+            target: target
         }
 
         let result = await sendJsonApiMessage(opts);
@@ -70,7 +70,7 @@ export namespace Services{
         return {services: parsedData};
     }
 
-    export async function sendSwuUpdate(updateFile: File): Promise<void>{
+    export async function sendSwuUpdate(updateFile: File, target : apiTarget = reactorApiTarget): Promise<void>{
         if (!updateFile.name.endsWith(".swu")) {
             throw Error("update file must be .swu")
         }
@@ -82,7 +82,7 @@ export namespace Services{
             validStatusCodes: [200, 202],
             data: await updateFile.arrayBuffer(),
             timeout: 60000,
-            target: reactorApiTarget
+            target: target
         }
 
         let result = await sendJsonApiMessage(opts);
