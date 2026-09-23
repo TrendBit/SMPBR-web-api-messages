@@ -15,6 +15,7 @@ interface  targetOptions {
 
 export interface apiTarget extends targetOptions{
     name: string;
+    onSendModifier?: (options: apiMessageOptions) => apiMessageOptions
 }
 
 export interface apiMessageOptions extends Partial<targetOptions>{
@@ -87,7 +88,11 @@ export type apiMessageJsonResult = {
   jsonValue: any
 }
 
-export async function sendApiMessage(options:apiMessageOptions){
+export async function sendApiMessage(options: apiMessageOptions) {
+    if (options.target.onSendModifier !== undefined) {
+        options = options.target.onSendModifier(options)
+    }
+    
     const target = options.target;
     const url = options.url
     const port = options.port ?? target.port
