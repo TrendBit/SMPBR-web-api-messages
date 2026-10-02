@@ -15,7 +15,10 @@ interface  targetOptions {
 
 export interface apiTarget extends targetOptions{
     name: string;
-    onSendModifier?: (options: apiMessageOptions) => apiMessageOptions
+    onSendModifier?: (options: apiMessageOptions) => apiMessageOptions,
+    onRecieveModifier?: (response: Response) => Response,
+    onRecieveJsonModifier?: (response: apiMessageJsonResult) => apiMessageJsonResult,
+    onRecieveTextModifier?: (response: apiMessageTextResult) => apiMessageTextResult
 }
 
 export interface apiMessageOptions extends Partial<targetOptions>{
@@ -124,7 +127,10 @@ export async function sendApiMessage(options: apiMessageOptions) {
         throw new ApiConnectionError(options);
     }
 
-    if(returnCodes.includes(response.status)){
+    if (returnCodes.includes(response.status)) {
+        if (target.onRecieveModifier) {
+            response = target.onRecieveModifier(response);
+        }
         return response;
     }else{
         let responseMessage : string | undefined = undefined;
@@ -143,11 +149,17 @@ export async function sendApiMessage(options: apiMessageOptions) {
 export async function sendJsonApiMessage(options:apiMessageOptions) : Promise<apiMessageJsonResult>{
     let response = await sendApiMessage(options)
     try {
-      let jsonParsed = await response.json();
-      return {
-        response: response,
-        jsonValue: jsonParsed
-      };
+        let jsonParsed = await response.json();
+        if (options.target.onRecieveJsonModifier) {
+            return options.target.onRecieveJsonModifier({
+                response: response,
+                jsonValue: jsonParsed
+            })
+        }
+        return {
+            response: response,
+            jsonValue: jsonParsed
+        };
     } catch (error) {
       throw new ApiUnparsableJsonBody(options);
     }
@@ -162,6 +174,12 @@ export async function sendTextApiMessage(options: apiMessageOptions): Promise<ap
     let response = await sendApiMessage(options)
     try {
         let textParsed = await response.text();
+        if (options.target.onRecieveTextModifier) {
+            return options.target.onRecieveTextModifier({
+                response: response,
+                textValue: textParsed
+            })
+        }
         return {
             response: response,
             textValue: textParsed
