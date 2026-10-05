@@ -89,6 +89,26 @@ export async function sendApiMessageGetFileContent(options : apiMessageGetFileCo
     }
 }
 
+export type apiMessageCreateFile  = {
+    url: string,
+    target: apiTarget,
+    fileName: string
+}
+
+
+export async function sendApiMessageCreateFile(options : apiMessageCreateFile) : Promise<void>{
+    let opts : apiMessageOptions = {
+        url: options.url + "/" + encodeURI(options.fileName),
+        target: options.target,
+        method: "PUT",
+        data: JSON.stringify({
+            content: "\n"
+        })
+    }
+
+    let result = await sendTextApiMessage(opts);
+}
+
 
 export type apiMessageSetFileContent = {
     url: string,
