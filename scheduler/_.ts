@@ -115,11 +115,15 @@ export namespace Scheduler {
         checkBoolean(data,"stopped",opts);
         
         let startedAtGiven = true;
-        try {
-            checkTimestamp(data,"startedAt",opts);
-        } catch (error) {
-            startedAtGiven=false;
-            checkNull(data,"startedAt",opts);
+        if (data["startedAt"] !== undefined) {
+            try {
+                checkTimestamp(data,"startedAt",opts);
+            } catch (error) {
+                startedAtGiven=false;
+                checkNull(data,"startedAt",opts);
+            }
+        } else {
+            startedAtGiven = false;
         }
 
         let state : "Running" | "Paused" | "Stopped" | "NeverStarted"  = "NeverStarted"
