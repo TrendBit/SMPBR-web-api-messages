@@ -15,10 +15,10 @@ interface  targetOptions {
 
 export interface apiTarget extends targetOptions{
     name: string;
-    onSendModifier?: (options: apiMessageOptions) => apiMessageOptions,
-    onRecieveModifier?: (response: Response) => Response,
-    onRecieveJsonModifier?: (response: apiMessageJsonResult) => apiMessageJsonResult,
-    onRecieveTextModifier?: (response: apiMessageTextResult) => apiMessageTextResult
+    onSendModifier?: (options: apiMessageOptions) => (apiMessageOptions | Promise<apiMessageOptions>),
+    onRecieveModifier?: (options: apiMessageOptions, response: Response) => (Response | Promise<Response>),
+    onRecieveJsonModifier?: (options: apiMessageOptions, response: apiMessageJsonResult) => (apiMessageJsonResult | Promise<apiMessageJsonResult>),
+    onRecieveTextModifier?: (options: apiMessageOptions, response: apiMessageTextResult) => (apiMessageTextResult | Promise<apiMessageTextResult>)
 }
 
 export interface apiMessageOptions extends Partial<targetOptions>{
@@ -93,7 +93,7 @@ export type apiMessageJsonResult = {
 
 export async function sendApiMessage(options: apiMessageOptions) {
     if (options.target.onSendModifier !== undefined) {
-        options = options.target.onSendModifier(options)
+        options = await options.target.onSendModifier(options)
     }
     
     const target = options.target;
@@ -129,7 +129,7 @@ export async function sendApiMessage(options: apiMessageOptions) {
 
     if (returnCodes.includes(response.status)) {
         if (target.onRecieveModifier) {
-            response = target.onRecieveModifier(response);
+            response = await target.onRecieveModifier(options,response);
         }
         return response;
     }else{
@@ -151,7 +151,7 @@ export async function sendJsonApiMessage(options:apiMessageOptions) : Promise<ap
     try {
         let jsonParsed = await response.json();
         if (options.target.onRecieveJsonModifier) {
-            return options.target.onRecieveJsonModifier({
+            return await options.target.onRecieveJsonModifier(options,{
                 response: response,
                 jsonValue: jsonParsed
             })
@@ -175,7 +175,7 @@ export async function sendTextApiMessage(options: apiMessageOptions): Promise<ap
     try {
         let textParsed = await response.text();
         if (options.target.onRecieveTextModifier) {
-            return options.target.onRecieveTextModifier({
+            return await options.target.onRecieveTextModifier(options,{
                 response: response,
                 textValue: textParsed
             })
