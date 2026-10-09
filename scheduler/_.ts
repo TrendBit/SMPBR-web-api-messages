@@ -70,13 +70,15 @@ export namespace Scheduler {
         await sendTextApiMessage(opts);
     }
 
+    export type ShedulerState = "Running" | "Paused" | "Stopped" | "NeverStarted"
+    
     export type runtimeInfoResult = {
         processId: number,
         name: string,
         finalMessage: string,
         stack: number[],
         output: {timeStamp: string, output: string}[],
-        state: "Running" | "Paused" | "Stopped" | "NeverStarted"
+        state: ShedulerState
         startedAt: Date | undefined
     }
 
