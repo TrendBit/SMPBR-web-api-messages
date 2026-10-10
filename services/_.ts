@@ -11,7 +11,7 @@ export namespace Services{
         subState : string,
         enabled : boolean,
         mainPid : number,
-        since : Date,
+        since : Date | undefined,
         stateType: stateTypes
     }
 
@@ -36,8 +36,14 @@ export namespace Services{
             checkString(el,"active_state",opts);
             checkString(el,"sub_state",opts);
             checkBoolean(el,"enabled",opts);
-            checkNumber(el,"main_pid",opts);
-            checkTimestamp(el, "since", opts);
+            checkNumber(el, "main_pid", opts);
+            let hasTimestamp;
+            try {
+                checkTimestamp(el, "since", opts);
+                hasTimestamp=true
+            } catch (e) {
+                hasTimestamp=false
+            }
 
             let stateType : stateTypes
             switch(el.active_state){
@@ -60,7 +66,7 @@ export namespace Services{
                 subState: el.sub_state,
                 enabled: el.enabled,
                 mainPid: el.main_pid,
-                since: new Date(el.since),
+                since: (hasTimestamp)?new Date(el.since):undefined,
                 stateType: stateType
             })
 
